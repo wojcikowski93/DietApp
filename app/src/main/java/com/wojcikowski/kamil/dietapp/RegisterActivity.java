@@ -42,7 +42,11 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void onSignupSuccess() {
-        //TODO: registration   new User
+        //if(userDetailsEmpty()){
+            //TODO: go to user detail activity
+       // } else {
+            //TODO: go to main view activity
+        //}
     }
 
     public boolean validate() {
@@ -64,6 +68,8 @@ public class RegisterActivity extends AppCompatActivity {
             et_userPassword.setText("");
             valid = false;
         }
+
+        //TODO: get existing userName from file stored on the phone
         return valid;
     }
 
