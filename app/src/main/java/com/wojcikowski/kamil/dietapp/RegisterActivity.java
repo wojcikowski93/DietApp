@@ -51,7 +51,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     public boolean validate() {
         boolean valid = true;
-        if(userName.isEmpty() || userName.length() > 15){
+        if(userName.isEmpty() || userName.length() > 6){
             et_userName.setError("Please enter valid name.");
             valid = false;
         }
