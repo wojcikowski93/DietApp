@@ -1,4 +1,4 @@
-package com.wojcikowski.kamil.dietapp;
+package com.wojcikowski.kamil.dietapp.model;
 
 import java.util.Date;
 

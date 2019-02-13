@@ -1,4 +1,4 @@
-package com.wojcikowski.kamil.dietapp;
+package com.wojcikowski.kamil.dietapp.model;
 
 public class User {
     private long user_id;
@@ -8,6 +8,12 @@ public class User {
     private UserDetails userDetails;
 
     public User() {
+    }
+
+    public User(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
     }
 
     public User(long user_id, String username, String password, String email) {

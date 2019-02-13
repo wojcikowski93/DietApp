@@ -1,5 +1,6 @@
-package com.wojcikowski.kamil.dietapp;
+package com.wojcikowski.kamil.dietapp.activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Patterns;
@@ -8,11 +9,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.wojcikowski.kamil.dietapp.R;
+import com.wojcikowski.kamil.dietapp.database.DatabaseHandler;
+import com.wojcikowski.kamil.dietapp.model.User;
+
+import java.util.List;
+
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText et_userName, et_userPassword, et_confirmUserPassword, et_userEmail;
     private String userName, userPassword, confirmUserPassword, userEmail;
     Button registerBt;
+
+    DatabaseHandler dbHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,15 +42,26 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void register() {
+        dbHandler = new DatabaseHandler(getApplicationContext());
+        dbHandler.open();
+        List<User> userList = dbHandler.getAllUsers();
+        for(User user : userList){
+            System.out.println(user.getUser_id() + ": " + user.getUsername());
+        }
         initialize();
         if(!validate()) {
             Toast.makeText(this, "Signup has Failed.", Toast.LENGTH_SHORT).show();
         } else {
+            User user = new User(userName, userPassword, userEmail);
+            dbHandler.insertUser(user);
+            dbHandler.close();
             onSignupSuccess();
         }
     }
 
     public void onSignupSuccess() {
+        startActivity(new Intent(RegisterActivity.this, Test.class));
+
         //if(userDetailsEmpty()){
             //TODO: go to user detail activity
        // } else {
@@ -51,12 +71,18 @@ public class RegisterActivity extends AppCompatActivity {
 
     public boolean validate() {
         boolean valid = true;
-        if(userName.isEmpty() || userName.length() > 6){
+        if(userName.isEmpty() || userName.length() < 4){
             et_userName.setError("Please enter valid name.");
+            valid = false;
+        } else if (dbHandler.usernameExists(userName)){
+            et_userName.setError("Username exists.");
             valid = false;
         }
         if(userEmail.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
             et_userEmail.setError("Please enter valid email address.");
+            valid = false;
+        } else if (dbHandler.emailExists(userEmail)){
+            et_userEmail.setError("Email exists.");
             valid = false;
         }
         if(userPassword.isEmpty()) {
@@ -68,8 +94,6 @@ public class RegisterActivity extends AppCompatActivity {
             et_userPassword.setText("");
             valid = false;
         }
-
-        //TODO: get existing userName from file stored on the phone
         return valid;
     }
 
