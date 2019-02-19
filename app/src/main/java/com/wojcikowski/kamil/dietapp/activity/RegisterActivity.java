@@ -10,6 +10,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.wojcikowski.kamil.dietapp.R;
+import com.wojcikowski.kamil.dietapp.Test;
+import com.wojcikowski.kamil.dietapp.database.DBUser;
 import com.wojcikowski.kamil.dietapp.database.DatabaseHandler;
 import com.wojcikowski.kamil.dietapp.model.User;
 
@@ -21,7 +23,7 @@ public class RegisterActivity extends AppCompatActivity {
     private String userName, userPassword, confirmUserPassword, userEmail;
     Button registerBt;
 
-    DatabaseHandler dbHandler;
+    DBUser dbUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +44,9 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void register() {
-        dbHandler = new DatabaseHandler(getApplicationContext());
-        dbHandler.open();
-        List<User> userList = dbHandler.getAllUsers();
+        dbUser = new DBUser(getApplicationContext());
+        dbUser.open();
+        List<User> userList = dbUser.getAllUsers();
         for(User user : userList){
             System.out.println(user.getUser_id() + ": " + user.getUsername());
         }
@@ -53,8 +55,8 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(this, "Signup has Failed.", Toast.LENGTH_SHORT).show();
         } else {
             User user = new User(userName, userPassword, userEmail);
-            dbHandler.insertUser(user);
-            dbHandler.close();
+            dbUser.insertUser(user);
+            dbUser.close();
             onSignupSuccess();
         }
     }
@@ -74,14 +76,14 @@ public class RegisterActivity extends AppCompatActivity {
         if(userName.isEmpty() || userName.length() < 4){
             et_userName.setError("Please enter valid name.");
             valid = false;
-        } else if (dbHandler.usernameExists(userName)){
+        } else if (dbUser.usernameExists(userName)){
             et_userName.setError("Username exists.");
             valid = false;
         }
         if(userEmail.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
             et_userEmail.setError("Please enter valid email address.");
             valid = false;
-        } else if (dbHandler.emailExists(userEmail)){
+        } else if (dbUser.emailExists(userEmail)){
             et_userEmail.setError("Email exists.");
             valid = false;
         }

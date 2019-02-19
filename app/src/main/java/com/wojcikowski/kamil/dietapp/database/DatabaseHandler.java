@@ -17,13 +17,13 @@ public class DatabaseHandler {
 
     private static final String DEBUG_TAG = "DatabaseHandler";
 
-    private SQLiteDatabase db;
+    protected SQLiteDatabase db;
     private Context context;
     private DatabaseHelper dbHelper;
 
     private static final int DB_VERSION = 1;
     private static final String DB_NAME = "dietapp.db";
-    private static final String DB_USER = "user";
+    protected static final String DB_USER = "user";
     private static final String DB_USER_DETAILS = "user_details";
     private static final String DB_MEASUREMENTS = "measurements";
 
@@ -79,102 +79,6 @@ public class DatabaseHandler {
 
     private static final String DROP_USER_TABLE =
             "DROP TABLE IF EXISTS " + DB_USER;
-
-    public long insertUser(User user) {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("username", user.getUsername());
-        contentValues.put("password", user.getPassword());
-        contentValues.put("email", user.getEmail());
-
-        return db.insert(DB_USER, null, contentValues);
-    }
-
-    public boolean updateUser(User user) {
-        long id = user.getUser_id();
-        String email = user.getEmail();
-        return updateUser(id, email);
-    }
-
-    public boolean updateUser(long id, String email) {
-        String where = "user_id=" + id;
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("email", email);
-        return db.update(DB_USER, contentValues, where, null) > 0;
-    }
-
-    public boolean deleteUser(long id) {
-        String where = "user_id=" + id;
-        return db.delete(DB_USER, where, null) > 0;
-    }
-
-    public List<User> getAllUsers() {
-        List<User> userList = new ArrayList<>();
-        String[] columns = {"user_id", "username", "password", "email"};
-        Cursor cursor = db.query(DB_USER, columns, null, null, null, null, null);
-        if (cursor != null && cursor.moveToFirst()) {
-            userList.add(new User(cursor.getLong(0), cursor.getString(1), cursor.getString(2), cursor.getString(3)));
-            while(cursor.moveToNext()){
-                userList.add(new User(cursor.getLong(0), cursor.getString(1), cursor.getString(2), cursor.getString(3)));
-            }
-            cursor.close();
-        }
-        return userList;
-    }
-
-    public User getUser(long id) {
-        String[] columns = {"user_id", "username", "password", "email"};
-        String where = "user_id=" + id;
-        Cursor cursor = db.query(DB_USER, columns, where, null, null, null, null);
-        User user = null;
-        if(cursor != null && cursor.moveToFirst()) {
-            user = new User(id, cursor.getString(1), cursor.getString(2), cursor.getString(3));
-            cursor.close();
-        }
-
-        return user;
-    }
-
-    public boolean usernameExists (String username) {
-        String[] columns = {"user_id", "username", "password", "email"};
-        String where = "username='" + username + "'";
-        Cursor cursor = db.query(DB_USER, columns, where, null, null, null, null);
-        if(cursor != null && cursor.moveToFirst()) {
-            cursor.close();
-            return true;
-        } else
-            return false;
-    }
-
-    public boolean emailExists (String email) {
-        String[] columns = {"user_id", "username", "password", "email"};
-        String where = "email='" + email +"'";
-        Cursor cursor = db.query(DB_USER, columns, where, null, null, null, null);
-        if(cursor != null && cursor.moveToFirst()) {
-            cursor.close();
-            return true;
-        } else
-            return false;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     /*
