@@ -10,7 +10,8 @@ import com.wojcikowski.kamil.dietapp.R;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button registerBt, logInBt;
+    Button registerBt;
+    Button logInBt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
