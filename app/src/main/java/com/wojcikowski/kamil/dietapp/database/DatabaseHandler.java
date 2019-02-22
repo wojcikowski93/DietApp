@@ -15,7 +15,7 @@ public class DatabaseHandler {
     private Context context;
     private DatabaseHelper dbHelper;
 
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
     private static final String DB_NAME = "dietapp.db";
     static final String DB_USER = "user";
 
@@ -28,6 +28,7 @@ public class DatabaseHandler {
         @Override
         public void onCreate(SQLiteDatabase db) {
 
+            db.execSQL(DROP_USER_TABLE);
             db.execSQL(DB_CREATE_USER_TABLE);
 
             Log.d(DEBUG_TAG, "Database creating...");
@@ -51,6 +52,7 @@ public class DatabaseHandler {
     }
 
     public DatabaseHandler open(){
+
         dbHelper = new DatabaseHelper(context, DB_NAME, null, DB_VERSION);
         try {
             db = dbHelper.getWritableDatabase();
@@ -65,7 +67,7 @@ public class DatabaseHandler {
     }
 
     private static final String DB_CREATE_USER_TABLE =
-            "CREATE TABLE " + DB_USER + " (userId INTEGER PRIMARY KEY AUTOINCREMENT," +
+            "CREATE TABLE " + DB_USER + " (userid INTEGER PRIMARY KEY AUTOINCREMENT," +
                     " username TEXT NOT NULL," +
                     " password TEXT NOT NULL," +
                     " email TEXT);";

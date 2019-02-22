@@ -1,6 +1,7 @@
 package com.wojcikowski.kamil.dietapp.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Patterns;
@@ -26,6 +27,8 @@ public class RegisterActivity extends AppCompatActivity {
     Button registerBt;
 
     DBUser dbUser;
+    public static final String SHARED_PREFS = "com.wojcikowski.kamil.dietApp.sharedPrefs";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +49,8 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void register() {
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         dbUser = new DBUser(getApplicationContext());
         dbUser.open();
         initialize();
@@ -55,12 +60,15 @@ public class RegisterActivity extends AppCompatActivity {
             User user = new User(userName, userPassword, userEmail);
             dbUser.insertUser(user);
             dbUser.close();
+            editor.putString(getString(R.string.loggedUser), user.getUsername());
+            editor.apply();
             onSignupSuccess();
         }
     }
 
     public void onSignupSuccess() {
-        startActivity(new Intent(RegisterActivity.this, Test.class));
+
+        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
 
         //if(userDetailsEmpty()){
             //TODO: go to user detail activity
@@ -74,14 +82,14 @@ public class RegisterActivity extends AppCompatActivity {
         if(userName.isEmpty() || userName.length() < 4){
             userNameET.setError("Please enter valid name.");
             valid = false;
-        } else if (dbUser.usernameExists(userName)){
+        } else if (dbUser.findUserByUsername(userName) != null){
             userNameET.setError("Username exists.");
             valid = false;
         }
         if(userEmail.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
             userEmailET.setError("Please enter valid email address.");
             valid = false;
-        } else if (dbUser.emailExists(userEmail)){
+        } else if (dbUser.findUserByEmail(userEmail) != null){
             userEmailET.setError("Email exists.");
             valid = false;
         }

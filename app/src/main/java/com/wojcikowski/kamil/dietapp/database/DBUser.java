@@ -16,21 +16,21 @@ public class DBUser extends  DatabaseHandler {
     }
 
     private String usernameColumn = "username";
-    private String passwordColumn = "password";
+    private String passColumn = "password";
     private String emailColumn = "email";
-    private String userIdColumn = "userId";
+    private String userIdColumn = "userid";
 
     public long insertUser(User user) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(usernameColumn, user.getUsername());
-        contentValues.put(passwordColumn, user.getPassword());
+        contentValues.put(passColumn, user.getPassword());
         contentValues.put(emailColumn, user.getEmail());
 
         return db.insert(DB_USER, null, contentValues);
     }
 
     public boolean updateUser(User user) {
-        long id = user.getUserId();
+        long id = user.getUserid();
         String email = user.getEmail();
         return updateUser(id, email);
     }
@@ -49,7 +49,7 @@ public class DBUser extends  DatabaseHandler {
 
     public List<User> getAllUsers() {
         List<User> userList = new ArrayList<>();
-        String[] columns = {userIdColumn, usernameColumn, passwordColumn, emailColumn};
+        String[] columns = {userIdColumn, usernameColumn, passColumn, emailColumn};
         Cursor cursor = db.query(DB_USER, columns, null, null, null, null, null);
         if (cursor != null && cursor.moveToFirst()) {
             userList.add(new User(cursor.getLong(0), cursor.getString(1), cursor.getString(2), cursor.getString(3)));
@@ -61,8 +61,8 @@ public class DBUser extends  DatabaseHandler {
         return userList;
     }
 
-    public User getUser(long id) {
-        String[] columns = {userIdColumn, usernameColumn, passwordColumn, emailColumn};
+    public User findUserById(long id) {
+        String[] columns = {userIdColumn, usernameColumn, passColumn, emailColumn};
         String where = userIdColumn+"=" + id;
         Cursor cursor = db.query(DB_USER, columns, where, null, null, null, null);
         User user = null;
@@ -70,30 +70,32 @@ public class DBUser extends  DatabaseHandler {
             user = new User(id, cursor.getString(1), cursor.getString(2), cursor.getString(3));
             cursor.close();
         }
-
         return user;
     }
 
-    public boolean usernameExists (String username) {
-        String[] columns = {userIdColumn, usernameColumn, passwordColumn, emailColumn};
+    public User findUserByUsername (String username) {
+        String[] columns = {userIdColumn, usernameColumn, passColumn, emailColumn};
         String where = "username='" + username + "'";
         Cursor cursor = db.query(DB_USER, columns, where, null, null, null, null);
+        User user = null;
         if(cursor != null && cursor.moveToFirst()) {
+            user = new User(cursor.getLong(0), cursor.getString(1), cursor.getString(2), cursor.getString(3));
             cursor.close();
-            return true;
-        } else
-            return false;
+        }
+        return user;
     }
 
-    public boolean emailExists (String email) {
-        String[] columns = {userIdColumn, usernameColumn, passwordColumn, emailColumn};
-        String where = "email='" + email +"'";
+    public User findUserByEmail (String email) {
+        String[] columns = {userIdColumn, usernameColumn, passColumn, emailColumn};
+        String where = "email='" + email + "'";
         Cursor cursor = db.query(DB_USER, columns, where, null, null, null, null);
-        if(cursor != null && cursor.moveToFirst()) {
+        User user = null;
+        if (cursor != null && cursor.moveToFirst()) {
+            user = new User(cursor.getLong(0), cursor.getString(1), cursor.getString(2), cursor.getString(3));
             cursor.close();
-            return true;
-        } else
-            return false;
+        }
+        return user;
     }
+
 
 }

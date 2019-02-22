@@ -1,7 +1,7 @@
 package com.wojcikowski.kamil.dietapp.model;
 
 public class User {
-    private long userId;
+    private long userid;
     private String username;
     private String password;
     private String email;
@@ -16,27 +16,27 @@ public class User {
         this.email = email;
     }
 
-    public User(long userId, String username, String password, String email) {
-        this.userId = userId;
+    public User(long userid, String username, String password, String email) {
+        this.userid = userid;
         this.username = username;
         this.password = password;
         this.email = email;
     }
 
-    public User(long userId, String username, String password, String email, UserDetails userDetails) {
-        this.userId = userId;
+    public User(long userid, String username, String password, String email, UserDetails userDetails) {
+        this.userid = userid;
         this.username = username;
         this.password = password;
         this.email = email;
         this.userDetails = userDetails;
     }
 
-    public long getUserId() {
-        return userId;
+    public long getUserid() {
+        return userid;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setUserid(long userid) {
+        this.userid = userid;
     }
 
     public String getUsername() {

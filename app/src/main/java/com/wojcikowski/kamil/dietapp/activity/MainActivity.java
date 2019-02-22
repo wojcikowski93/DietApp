@@ -1,6 +1,8 @@
 package com.wojcikowski.kamil.dietapp.activity;
 
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,29 +12,42 @@ import com.wojcikowski.kamil.dietapp.R;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button registerBt;
-    Button logInBt;
+    public static final String SHARED_PREFS = "com.wojcikowski.kamil.dietApp.sharedPrefs";
+
+    Button logoutBt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        String loggedUser = sharedPreferences.getString("loggeduser", "");
 
-        registerBt = findViewById(R.id.signIn);
-        logInBt = findViewById(R.id.logIn);
 
-        registerBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, RegisterActivity.class));
-            }
-        });
+        if(loggedUser.equals("")) {
+            startActivity(new Intent(MainActivity.this, LRActivity.class));
+        } else {
+            setContentView(R.layout.activity_main);
+            logoutBt = findViewById(R.id.logoutBt);
+            logoutBt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    logout();
+                }
+            });
+        }
 
-        logInBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO: startActivity(new Intent(MainActivity.this, LogInActivity.class));
-            }
-        });
+
+
+    }
+
+    private void logout() {
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putString(getString(R.string.loggedUser), "");
+        editor.apply();
+
+        finish();
+        startActivity(getIntent());
     }
 }
