@@ -67,14 +67,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void onSignupSuccess() {
-
-        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-
-        //if(userDetailsEmpty()){
-            //TODO: go to user detail activity
-       // } else {
-            //TODO: go to main view activity
-        //}
+        startActivity(new Intent(RegisterActivity.this, UserDetailsActivity.class));
     }
 
     public boolean validate() {

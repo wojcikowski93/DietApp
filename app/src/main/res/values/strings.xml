@@ -10,4 +10,12 @@
     <string name="application_icon">Application icon</string>
     <string name="loggedUser">loggeduser</string>
     <string name="logout">Log out</string>
+    <string name="userDetails">Details</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="birthday">Birthday</string>
+    <string name="height">Height</string>
+    <string name="weight">Weight</string>
+    <string name="targetWeight">Target Weight</string>
+    <string name="confirm">Confirm</string>
 </resources>
