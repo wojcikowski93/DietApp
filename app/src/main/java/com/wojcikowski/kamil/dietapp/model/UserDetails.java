@@ -5,6 +5,7 @@ import java.util.List;
 
 public class UserDetails {
 
+    private long userID;
     private String gender;
     private Date birthday;
     private int height;
@@ -14,12 +15,29 @@ public class UserDetails {
     public UserDetails() {
     }
 
-    public UserDetails(String gender, Date birthday, int height, Double targetWeight, List<Measurements> measurementsList) {
+    public UserDetails(long userID, String gender, Date birthday, int height, Double targetWeight) {
+        this.userID = userID;
+        this.gender = gender;
+        this.birthday = birthday;
+        this.height = height;
+        this.targetWeight = targetWeight;
+    }
+
+    public UserDetails(long userID, String gender, Date birthday, int height, Double targetWeight, List<Measurements> measurementsList) {
+        this.userID = userID;
         this.gender = gender;
         this.birthday = birthday;
         this.height = height;
         this.targetWeight = targetWeight;
         this.measurementsList = measurementsList;
+    }
+
+    public long getUserID() {
+        return userID;
+    }
+
+    public void setUserID(long userID) {
+        this.userID = userID;
     }
 
     public String getGender() {
