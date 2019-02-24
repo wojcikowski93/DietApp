@@ -1,11 +1,14 @@
 package com.wojcikowski.kamil.dietapp.model;
 
+import java.util.List;
+
 public class User {
     private long userid;
     private String username;
     private String password;
     private String email;
     private UserDetails userDetails;
+    private List<Measurements> measurementsList;
 
     public User() {
     }
@@ -23,12 +26,13 @@ public class User {
         this.email = email;
     }
 
-    public User(long userid, String username, String password, String email, UserDetails userDetails) {
+    public User(long userid, String username, String password, String email, UserDetails userDetails, List<Measurements> measurements) {
         this.userid = userid;
         this.username = username;
         this.password = password;
         this.email = email;
         this.userDetails = userDetails;
+        this.measurementsList = measurements;
     }
 
     public long getUserid() {
@@ -69,5 +73,13 @@ public class User {
 
     public void setUserDetails(UserDetails userDetails) {
         this.userDetails = userDetails;
+    }
+
+    public List<Measurements> getMeasurementsList() {
+        return measurementsList;
+    }
+
+    public void setMeasurementsList(List<Measurements> measurementsList) {
+        this.measurementsList = measurementsList;
     }
 }

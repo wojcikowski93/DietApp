@@ -11,7 +11,6 @@ public class UserDetails {
     private Date birthday;
     private int height;
     private Double targetWeight;
-    private List<Measurements> measurementsList;
 
     public UserDetails() {
     }
@@ -31,15 +30,6 @@ public class UserDetails {
         this.birthday = birthday;
         this.height = height;
         this.targetWeight = targetWeight;
-    }
-
-    public UserDetails(long userID, String gender, Date birthday, int height, Double targetWeight, List<Measurements> measurementsList) {
-        this.userID = userID;
-        this.gender = gender;
-        this.birthday = birthday;
-        this.height = height;
-        this.targetWeight = targetWeight;
-        this.measurementsList = measurementsList;
     }
 
     public long getDetailsid() {
@@ -88,13 +78,5 @@ public class UserDetails {
 
     public void setTargetWeight(Double targetWeight) {
         this.targetWeight = targetWeight;
-    }
-
-    public List<Measurements> getMeasurementsList() {
-        return measurementsList;
-    }
-
-    public void setMeasurementsList(List<Measurements> measurementsList) {
-        this.measurementsList = measurementsList;
     }
 }
