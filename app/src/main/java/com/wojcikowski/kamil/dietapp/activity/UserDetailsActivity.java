@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 
 import com.wojcikowski.kamil.dietapp.R;
+import com.wojcikowski.kamil.dietapp.database.DBDetails;
 import com.wojcikowski.kamil.dietapp.database.DBUser;
 import com.wojcikowski.kamil.dietapp.model.User;
 import com.wojcikowski.kamil.dietapp.model.UserDetails;

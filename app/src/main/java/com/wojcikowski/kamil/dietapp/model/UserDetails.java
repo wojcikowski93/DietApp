@@ -5,6 +5,7 @@ import java.util.List;
 
 public class UserDetails {
 
+    private long detailsid;
     private long userID;
     private String gender;
     private Date birthday;
@@ -23,6 +24,15 @@ public class UserDetails {
         this.targetWeight = targetWeight;
     }
 
+    public UserDetails(long detailsid, long userID, String gender, Date birthday, int height, Double targetWeight) {
+        this.detailsid = detailsid;
+        this.userID = userID;
+        this.gender = gender;
+        this.birthday = birthday;
+        this.height = height;
+        this.targetWeight = targetWeight;
+    }
+
     public UserDetails(long userID, String gender, Date birthday, int height, Double targetWeight, List<Measurements> measurementsList) {
         this.userID = userID;
         this.gender = gender;
@@ -30,6 +40,14 @@ public class UserDetails {
         this.height = height;
         this.targetWeight = targetWeight;
         this.measurementsList = measurementsList;
+    }
+
+    public long getDetailsid() {
+        return detailsid;
+    }
+
+    public void setDetailsid(long detailsid) {
+        this.detailsid = detailsid;
     }
 
     public long getUserID() {
@@ -48,8 +66,8 @@ public class UserDetails {
         this.gender = gender;
     }
 
-    public Date getBirthday() {
-        return birthday;
+    public String getBirthday() {
+        return birthday.toString();
     }
 
     public void setBirthday(Date birthday) {
