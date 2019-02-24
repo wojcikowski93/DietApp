@@ -30,15 +30,9 @@ public class DBUser extends  DatabaseHandler {
     }
 
     public boolean updateUser(User user) {
-        long id = user.getUserid();
-        String email = user.getEmail();
-        return updateUser(id, email);
-    }
-
-    private boolean updateUser(long id, String email) {
-        String where = userIdColumn+"=" + id;
+        String where = userIdColumn+"=" + user.getUserid();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(emailColumn, email);
+        contentValues.put(emailColumn, user.getEmail());
         return db.update(DB_USER, contentValues, where, null) > 0;
     }
 
