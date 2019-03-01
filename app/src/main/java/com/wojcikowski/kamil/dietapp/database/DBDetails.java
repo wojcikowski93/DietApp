@@ -73,7 +73,7 @@ public class DBDetails extends DatabaseHandler {
     private Date getBirthdayDate(Cursor cursor) {
         Date birthday = null;
         try {
-            birthday = new SimpleDateFormat("dd/MM/yyyy").parse(cursor.getString(3));
+            birthday = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy").parse(cursor.getString(3));
         } catch (ParseException e) {
             Log.e(DEBUG_TAG, e.getMessage());
         }

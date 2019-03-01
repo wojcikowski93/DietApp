@@ -1,6 +1,7 @@
 package com.wojcikowski.kamil.dietapp.activity;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.TextView;
 
 import com.wojcikowski.kamil.dietapp.R;
 import com.wojcikowski.kamil.dietapp.database.DBDetails;
@@ -28,7 +30,7 @@ public class UserDetailsActivity extends AppCompatActivity {
 
     private static final String TAG = "UserDetails";
 
-    private EditText birthdayET;
+    private TextView birthdayTV;
     private EditText heightET;
     private EditText targetWeightET;
 
@@ -45,31 +47,95 @@ public class UserDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_details);
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        String loggedUser = sharedPreferences.getString("loggeduser", "");
+        dbUser = new DBUser((getApplicationContext()));
+        dbUser.open();
+        User user = dbUser.findUserByUsername(loggedUser);
+        dbUser.close();
 
-        heightET = findViewById(R.id.userHeight);
-        targetWeightET = findViewById(R.id.userTargetWeight);
-        birthdayET = findViewById(R.id.birthdayPicker);
-        Button confirmBt = findViewById(R.id.confirmDetailsBt);
+        dbDetails = new DBDetails((getApplicationContext()));
+        dbDetails.open();
+        UserDetails userDetails = dbDetails.findDetailsByUserID(user.getUserid());
+        dbDetails.close();
 
-        birthdayET.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loadDatePicker();
-            }
-        });
+        RadioButton femaleRB = findViewById(R.id.femaleRB);
+        RadioButton maleRB = findViewById(R.id.maleRB);
 
-        confirmBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    saveUserDetails();
-                } catch (ParseException e) {
-                    Log.e(TAG, e.getMessage());
+        if(userDetails != null && areDetailsFulfilled(userDetails)) {
+            startActivity(new Intent(UserDetailsActivity.this, MainActivity.class));
+        } else {
+            setContentView(R.layout.activity_user_details);
+
+            System.out.println("User: " + userDetails.getTargetWeight() + "   --  " + userDetails.getBirthday());
+
+            heightET = findViewById(R.id.userHeight);
+            targetWeightET = findViewById(R.id.userTargetWeight);
+            birthdayTV = findViewById(R.id.birthdayPicker);
+            Button confirmBt = findViewById(R.id.confirmDetailsBt);
+
+            birthdayTV.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Calendar calendar = Calendar.getInstance();
+                    int year = calendar.get(Calendar.YEAR);
+                    int month = calendar.get(Calendar.MONTH);
+                    int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                    DatePickerDialog datePickerDialog = new DatePickerDialog(
+                            UserDetailsActivity.this,
+                            android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                            dateSetListener,
+                            year, month, day);
+
+                    datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    datePickerDialog.show();
                 }
-            }
-        });
+            });
 
+            dateSetListener = new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                    month = month + 1;
+
+                    String date = day + "/" + month + "/" + year;
+                    birthdayTV.setText(date);
+                }
+            };
+
+            confirmBt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        saveUserDetails();
+                    } catch (ParseException e) {
+                        Log.e(TAG, e.getMessage());
+                    }
+                }
+            });
+
+            if(userDetails != null && userDetails.getHeight() != 0){
+                heightET.setText(String.valueOf(userDetails.getHeight()));
+            }
+            if(userDetails != null && userDetails.getGender() != null && userDetails.getGender().equals("female")){
+                femaleRB.setChecked(true);
+            } else if (userDetails != null && userDetails.getGender() != null && userDetails.getGender().equals("male")) {
+                maleRB.setChecked(true);
+            }
+            if(userDetails != null && userDetails.getTargetWeight() != null) {
+                targetWeightET.setText(userDetails.getTargetWeight().toString());
+            }
+            if(userDetails != null && userDetails.getBirthday() != null) {
+                birthdayTV.setText(userDetails.getBirthday());
+            }
+        }
+    }
+
+    private boolean areDetailsFulfilled(UserDetails userDetails) {
+        return userDetails.getBirthday() != null
+                && userDetails.getGender() != null
+                && userDetails.getHeight() != 0
+                && userDetails.getTargetWeight() != null;
     }
 
     private void saveUserDetails() throws ParseException {
@@ -86,39 +152,15 @@ public class UserDetailsActivity extends AppCompatActivity {
         dbDetails.insertDetails(userDetails);
         dbDetails.close();
 
-        //TODO: on details success
+        //TODO: go to Measurements Activity
+        startActivity(new Intent(UserDetailsActivity.this, MainActivity.class));
     }
 
     private void initialize() throws ParseException {
         targetWeight = Double.parseDouble(targetWeightET.getText().toString());
         height = Integer.parseInt(heightET.getText().toString());
-        birthday = new SimpleDateFormat("dd/MM/yyyy").parse(birthdayET.getText().toString());
-    }
-
-    private void loadDatePicker() {
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
-                this,
-                android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                dateSetListener,
-                year, month, day);
-
-        datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        datePickerDialog.show();
-
-        dateSetListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                month = month + 1;
-
-                String date = day + "/" + month + "/" + year;
-                birthdayET.setText(date);
-            }
-        };
+        birthday = new SimpleDateFormat("dd/MM/yyyy").parse(birthdayTV.getText().toString());
+        System.out.println("TEST: " + birthday);
     }
 
     public void onRadioButtonClicked(View view) {

@@ -57,7 +57,9 @@ public class UserDetails {
     }
 
     public String getBirthday() {
-        return birthday.toString();
+        if(birthday != null) {
+            return birthday.toString();
+        } else return null;
     }
 
     public void setBirthday(Date birthday) {

@@ -55,8 +55,7 @@ public class LoginActivity extends AppCompatActivity {
             editor.apply();
             dbUser.close();
             Toast.makeText(this, "Logged in successfully", Toast.LENGTH_SHORT).show();
-            //TODO: check details
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            startActivity(new Intent(LoginActivity.this, UserDetailsActivity.class));
         }
     }
 
@@ -71,7 +70,10 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             user = dbUser.findUserByUsername(username);
         }
-        if (userPassword.isEmpty()) {
+        if(user == null) {
+            userNameET.setError("User not exists.");
+            valid = false;
+        } else if (userPassword.isEmpty()) {
             userPasswordET.setError("Please enter valid password.");
             valid = false;
         } else if (!userPassword.equals(user.getPassword())) {

@@ -60,13 +60,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp">
-            <EditText
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/birthday"
                 android:autofillHints="@string/birthday"
                 android:id="@+id/birthdayPicker"
-                android:inputType="date"
+                android:textSize="18sp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"/>
         </android.support.design.widget.TextInputLayout>
