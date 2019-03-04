@@ -5,9 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -21,20 +20,16 @@ import com.wojcikowski.kamil.dietapp.database.DBUser;
 import com.wojcikowski.kamil.dietapp.model.User;
 import com.wojcikowski.kamil.dietapp.model.UserDetails;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
-import java.util.Date;
 
 public class UserDetailsActivity extends AppCompatActivity {
-
-    private static final String TAG = "UserDetails";
 
     private TextView birthdayTV;
     private EditText heightET;
     private EditText targetWeightET;
 
-    private Date birthday;
+    private LocalDate birthday;
     private String gender;
     private int height;
     private Double targetWeight;
@@ -67,8 +62,6 @@ public class UserDetailsActivity extends AppCompatActivity {
         } else {
             setContentView(R.layout.activity_user_details);
 
-            System.out.println("User: " + userDetails.getTargetWeight() + "   --  " + userDetails.getBirthday());
-
             heightET = findViewById(R.id.userHeight);
             targetWeightET = findViewById(R.id.userTargetWeight);
             birthdayTV = findViewById(R.id.birthdayPicker);
@@ -98,7 +91,7 @@ public class UserDetailsActivity extends AppCompatActivity {
                 public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                     month = month + 1;
 
-                    String date = day + "/" + month + "/" + year;
+                    String date = year + "-" + month + "-" + day;
                     birthdayTV.setText(date);
                 }
             };
@@ -106,11 +99,7 @@ public class UserDetailsActivity extends AppCompatActivity {
             confirmBt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    try {
-                        saveUserDetails();
-                    } catch (ParseException e) {
-                        Log.e(TAG, e.getMessage());
-                    }
+                    saveUserDetails();
                 }
             });
 
@@ -138,7 +127,7 @@ public class UserDetailsActivity extends AppCompatActivity {
                 && userDetails.getTargetWeight() != null;
     }
 
-    private void saveUserDetails() throws ParseException {
+    private void saveUserDetails() {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         String loggedUser = sharedPreferences.getString("loggeduser", "");
         dbUser = new DBUser((getApplicationContext()));
@@ -156,11 +145,11 @@ public class UserDetailsActivity extends AppCompatActivity {
         startActivity(new Intent(UserDetailsActivity.this, MainActivity.class));
     }
 
-    private void initialize() throws ParseException {
+    private void initialize() {
         targetWeight = Double.parseDouble(targetWeightET.getText().toString());
         height = Integer.parseInt(heightET.getText().toString());
-        birthday = new SimpleDateFormat("dd/MM/yyyy").parse(birthdayTV.getText().toString());
-        System.out.println("TEST: " + birthday);
+        String[] date = birthdayTV.getText().toString().split("-");
+        birthday = LocalDate.of(Integer.parseInt(date[0]), Integer.parseInt(date[1]), Integer.parseInt(date[2]));
     }
 
     public void onRadioButtonClicked(View view) {

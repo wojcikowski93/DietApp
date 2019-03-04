@@ -1,21 +1,20 @@
 package com.wojcikowski.kamil.dietapp.model;
 
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
 
 public class UserDetails {
 
     private long detailsid;
     private long userID;
     private String gender;
-    private Date birthday;
+    private LocalDate birthday;
     private int height;
     private Double targetWeight;
 
     public UserDetails() {
     }
 
-    public UserDetails(long userID, String gender, Date birthday, int height, Double targetWeight) {
+    public UserDetails(long userID, String gender, LocalDate birthday, int height, Double targetWeight) {
         this.userID = userID;
         this.gender = gender;
         this.birthday = birthday;
@@ -23,7 +22,7 @@ public class UserDetails {
         this.targetWeight = targetWeight;
     }
 
-    public UserDetails(long detailsid, long userID, String gender, Date birthday, int height, Double targetWeight) {
+    public UserDetails(long detailsid, long userID, String gender, LocalDate birthday, int height, Double targetWeight) {
         this.detailsid = detailsid;
         this.userID = userID;
         this.gender = gender;
@@ -62,7 +61,7 @@ public class UserDetails {
         } else return null;
     }
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
     }
 

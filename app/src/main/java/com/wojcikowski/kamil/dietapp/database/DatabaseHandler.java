@@ -16,7 +16,7 @@ public class DatabaseHandler {
     private Context context;
     private DatabaseHelper dbHelper;
 
-    private static final int DB_VERSION = 3;
+    private static final int DB_VERSION = 4;
     private static final String DB_NAME = "dietapp.db";
     static final String DB_USER = "user";
     static final String DB_DETAILS = "details";

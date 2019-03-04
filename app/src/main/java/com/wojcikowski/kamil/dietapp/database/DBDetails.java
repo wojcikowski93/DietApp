@@ -3,17 +3,14 @@ package com.wojcikowski.kamil.dietapp.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
 import com.wojcikowski.kamil.dietapp.model.UserDetails;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class DBDetails extends DatabaseHandler {
-
-    private static final String DEBUG_TAG = "DBDetails";
 
     public DBDetails(Context context) {
         super(context);
@@ -70,14 +67,11 @@ public class DBDetails extends DatabaseHandler {
         return userDetails;
     }
 
-    private Date getBirthdayDate(Cursor cursor) {
-        Date birthday = null;
-        try {
-            birthday = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy").parse(cursor.getString(3));
-        } catch (ParseException e) {
-            Log.e(DEBUG_TAG, e.getMessage());
-        }
-        return birthday;
+    private LocalDate getBirthdayDate(Cursor cursor) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        dtf = dtf.withLocale(Locale.US);
+
+        return LocalDate.parse(cursor.getString(3), dtf);
     }
 
 }
